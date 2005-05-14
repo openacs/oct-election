@@ -36,18 +36,29 @@ template::list::create \
 	    }
 	    sub_class narrow
 	}
+	count {
+	    label "Count"
+	}
     }
 
 db_multirow \
     -extend { 
 	delete_url
+	count
     } candidates candidates_select {
-	select candidate_id,
-               label as candidate_label
-          from oct_candidate
-         where election = :election_id
+	select oc.candidate_id,
+               oc.label as candidate_label,
+               count(ov.candidate_id) as cand_count
+	  from oct_candidate oc left outer join oct_vote ov using (candidate_id)
+         where oc.election = :election_id
+         group by oc.candidate_id, oc.label
     } {
 	set delete_url [export_vars -base "candidate-delete" {candidate_id  election_id}]
+	if {} {
+	    set count $cand_count
+	} else {
+	    set count "Results pending"
+	}
     }
  
 #TODO: show vote total if election is over
