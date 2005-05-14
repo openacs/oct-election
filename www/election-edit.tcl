@@ -4,8 +4,10 @@ ad_page_contract {
     election_id:integer,optional
 } 
 
+permission::require_permission -object_id [ad_conn package_id] -privilege admin
 set page_title "Editing Election"
 set context [list $page_title]
+
 
 ad_form -name election -form {
     {election_id:key}
@@ -21,16 +23,17 @@ ad_form -name election -form {
     set context [list $page_title]
 } -edit_request {
     auth::require_login
-    permission::require_write_permission -object_id $election_id
+    # this permission check is a lazy workaround for not having elections as real objects
+    permission::require_write_permission -object_id [ad_conn package_id]
 
     db_1row get_election {
 	select start_time,
-	end_time,
-	label,
-	vote_forum_cutoff,
-        number_of_candidates
-	from oct_election
-	where election_id = :election_id;
+               end_time,
+	       label,
+	       vote_forum_cutoff,
+               number_of_candidates
+	  from oct_election
+	 where election_id = :election_id;
     }
     set page_title "Edit $label"
     set context [list $page_title]

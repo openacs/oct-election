@@ -8,7 +8,7 @@
     <singleton-p>f</singleton-p>
     <auto-mount>oct-election</auto-mount>
 
-    <version name="0.1d" url="http://openacs.org/repository/download/apm/oct-election-0.1d.apm">
+    <version name="1.0" url="http://openacs.org/repository/download/apm/oct-election-1.0.apm">
         <owner url="mailto:joel@aufrecht.org">Joel Aufrecht</owner>
         <summary>Web app for voting in OCT elections.</summary>
 

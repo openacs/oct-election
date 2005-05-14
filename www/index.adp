@@ -1,6 +1,6 @@
 <master>
   <property name="title">@page_title;noquote@</property>
-  <property name="context">@context;noquote@</property>
+  <property name="context">"@context;noquote@"</property>
 
 <listtemplate name="elections"></listtemplate>
 <if @admin_p@>
