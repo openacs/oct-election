@@ -6,7 +6,7 @@ ad_page_contract {
 } 
 
 auth::require_login
-permission::require_permission -object_id [ad_conn package_id] -privilege create
+permission::require_permission -object_id [ad_conn package_id] -privilege admin
 
 db_dml candidate_delete {
     delete from oct_candidate 

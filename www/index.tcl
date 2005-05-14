@@ -5,7 +5,7 @@ ad_page_contract {
 
 set page_title "OCT Elections"
 set context $page_title
-set admin_p [acs_user::site_wide_admin_p]
+set admin_p [permission::permission_p -object_id [ad_conn package_id] -privilege create]
 
 template::list::create \
     -name elections \
