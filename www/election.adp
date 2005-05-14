@@ -3,10 +3,10 @@
   <property name="context">@context;noquote@</property>
 
 <p>Election: @label@
-<p>Number of winners possible: @number_of_candidates@
-<p>Start time: @start_time@
-<p>End time: @end_time@
-<p>Forum cutoff date: @vote_forum_cutoff@
+<p>Number of OCT vacancies: @number_of_candidates@
+<p>Start time: @pretty_start_time@
+<p>End time: @pretty_end_time@
+<p>Forum cutoff date: @pretty_vote_forum_cutoff@
 <p>Ballots: @ballot_count@
 <if @admin_p@>
 <p>  <a href="election-edit?election_id=@election_id@">Edit</a></p>
@@ -30,6 +30,6 @@
   </form>
 </if>
 <else>
-  @valid_voter_text@
+  @valid_voter_text;noquote@
 </else>
 

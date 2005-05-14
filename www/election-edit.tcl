@@ -40,8 +40,8 @@ ad_form -name election -form {
 } -new_data {
     db_dml create_election {
 	insert into oct_election
-	(start_time, end_time, number_of_candidates, label)
-	values (:start_time, :end_time, :number_of_candidates, :label);
+	(start_time, end_time, number_of_candidates, vote_forum_cutoff, label)
+	values (:start_time, :end_time, :number_of_candidates, :vote_forum_cutoff, :label);
     }
 } -edit_data {
     db_dml update_election {
