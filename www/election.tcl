@@ -22,6 +22,10 @@ db_1row get_election {
      where election_id = :election_id
 }
 
+set pretty_start_time [lc_time_fmt $start_time %c]
+set pretty_end_time [lc_time_fmt $end_time %c]
+set pretty_vote_forum_cutoff [lc_time_fmt $vote_forum_cutoff %c]
+
 set ballot_count [db_string get_ballot_count {
     select count(*) 
       from oct_ballot
@@ -87,4 +91,3 @@ db_1row get_now {
     select now() as now
     from dual;
 }
-
