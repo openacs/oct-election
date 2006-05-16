@@ -56,7 +56,7 @@ template::list::create \
 	}
     }
 
-if {$past_end_p} {
+if {!$past_end_p} {
     set order_clause "order by label"
 } else {
     set order_clause "order by cand_count desc"
