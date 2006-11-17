@@ -65,7 +65,7 @@ ad_proc -private oct-election::valid_voter_p {
     if {$cvs_history_days eq 0} {
 	set cvs_history_days "all"
     }
-    set service_url "http://xarg.net/tools/cvs/rss/?user=$cvs_user&days=$days"
+    set service_url "http://xarg.net/tools/cvs/rss/?user=$cvs_user&days=$cvs_history_days"
     if {![catch {
 	set commit_info [ns_httpget $service_url]
     } errmsg] } {
