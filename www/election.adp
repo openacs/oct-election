@@ -7,6 +7,7 @@
 <p>Start time: @pretty_start_time@
 <p>End time: @pretty_end_time@
 <p>Forum cutoff date: @pretty_vote_forum_cutoff@
+<p>Check CVS Commit History for the las @cvs_history_days@ days
 <p>Ballots: @ballot_count@
 <if @admin_p@>
 <p>  <a href="election-edit?election_id=@election_id@">Edit</a></p>

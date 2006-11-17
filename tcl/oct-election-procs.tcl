@@ -54,13 +54,40 @@ ad_proc -private oct-election::valid_voter_p {
 	set text "You are not a valid voter for this election because you have not posted at least twice in the OpenACS forums since $pretty_vote_forum_cutoff.  See <a href=\"http://openacs.org/governance/\">OpenACS Governance</a>"
 	return [list $status $text]
     }
-
+    
+    #Checking CVS commit history
+    set cvs_user [acs_user::get_element -user_id $user_id -element username]
+    set cvs_history_days [db_string get_cvs_days {
+ 	select cvs_history_days
+	from oct_election
+	where election_id = :election_id
+    } ]
+    if {$cvs_history_days eq 0} {
+	set cvs_history_days "all"
+    }
+    set service_url "http://xarg.net/tools/cvs/rss/?user=$cvs_user&days=$days"
+    if {![catch {
+	set commit_info [ns_httpget $service_url]
+    } errmsg] } {
+	set doc [dom parse $commit_info]
+	set root_node [$doc documentElement]
+	set commits [llength [$root_node selectNodes /rss/channel/item]]
+	if {!$commits} {
+	    set status 0 
+	    set text "You are not a valid voter for this election because you have not committed in the CVS Repository in the last $cvs_history_days.  See <a href=\"http://openacs.org/governance/\">OpenACS Governance</a>"
+	    return [list $status $text]
+	}
+    } else {
+	set status 0 
+	set text "We can not confirm your commit history in our CVS Repository, so you can not vote at this moment."
+	return [list $status $text]
+    }
+    
     if {!$past_start_p} {
 	set status 0
 	set text "The election will not begin until [lc_time_fmt $start_time %c]"
 	return [list $status $text]
     }
-
     if {$past_end_p} {
 	set status 0
 	set text "The election ended at [lc_time_fmt $end_time %c]"

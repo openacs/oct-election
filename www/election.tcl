@@ -16,6 +16,7 @@ db_1row get_election {
            vote_forum_cutoff,
            number_of_candidates,
            label,
+	   cvs_history_days,
            (case when now() > start_time then 1 else 0 end) as past_start_p,
            (case when now() > end_time then 1 else 0 end) as past_end_p
       from oct_election
