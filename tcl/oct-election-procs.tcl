@@ -11,6 +11,7 @@ ad_proc -private oct-election::valid_voter_p {
     @author Joel Aufrecht
 } {
     set status 1
+    set text ""
     # Has the user already voted in this election?
     set ballot_p [db_string get_ballot {
 	select count(*) 
@@ -47,14 +48,15 @@ ad_proc -private oct-election::valid_voter_p {
           where cc_users.user_id = forums_messages.user_id
             and posting_date between $before_sql - interval '$num_days days' and $before_sql
             and cc_users.user_id = $user_id
-    "]
-
-        if {$num_posts < 2} {
+    	"]
+    
+    if {$num_posts < 2} {
 	set status 0
 	set text "You are not a valid voter for this election because you have not posted at least twice in the OpenACS forums since $pretty_vote_forum_cutoff.  See <a href=\"http://openacs.org/governance/\">OpenACS Governance</a>"
-	return [list $status $text]
+    } else {
+	set valid_voter_p 1
     }
-    
+
     #Checking CVS commit history
     set cvs_user [acs_user::get_element -user_id $user_id -element username]
     set cvs_history_days [db_string get_cvs_days {
@@ -73,13 +75,21 @@ ad_proc -private oct-election::valid_voter_p {
 	set root_node [$doc documentElement]
 	set commits [llength [$root_node selectNodes /rss/channel/item]]
 	if {!$commits} {
-	    set status 0 
-	    set text "You are not a valid voter for this election because you have not committed in the CVS Repository in the last $cvs_history_days.  See <a href=\"http://openacs.org/governance/\">OpenACS Governance</a>"
-	    return [list $status $text]
+	    if {$status} {
+		set status 0 
+		set text "You are not a valid voter for this election because you have not committed in the CVS Repository in the last $cvs_history_days.  See <a href=\"http://openacs.org/governance/\">OpenACS Governance</a>"
+	    }
+	} else {
+	    set valid_voter_p 1
 	}
     } else {
-	set status 0 
-	set text "We can not confirm your commit history in our CVS Repository, so you can not vote at this moment."
+	if {$status} {
+	    set status 0 
+	    set text "We can not confirm your commit history in our CVS Repository, so you can not vote at this moment."
+	}
+    }
+    
+    if {!$valid_voter_p} {
 	return [list $status $text]
     }
     
