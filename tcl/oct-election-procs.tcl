@@ -105,6 +105,35 @@ ad_proc -private oct-election::valid_voter_p {
     }
 
     set status 1
-    set text "You have already voted in this election."
+    set text "We look forward to your vote."
     return [list $status $text]
+}
+
+ad_proc -public oct_election::valid_voters {
+    {-status "not_voted"}
+    -election_id:required
+} {
+    Return a list of valid voters
+
+    @param status Could be "voted" or "non_voted", reflecting the voters who have voted for the elections already and the ones who did not vote yet.
+} {
+
+
+    if {$status eq "voted"} {
+	return [db_list voters "select u. user_id from cc_users u, (select count(user_id) as ballot,user_id from oct_ballot o where election_id = 5 group by user_id) ballots where ballots.user_id = u.user_id and ballot > 0 and u.member_state = 'approved'"]
+	ad_script_abort
+    } else {
+	set voter_ids [list]
+	db_foreach possible_voter "select u. user_id from cc_users u where u.member_state = 'approved'" {
+	    
+	    # Check if the user is actually allowed to vote
+	    set valid_voter [oct-election::valid_voter_p -election_id $election_id -user_id $user_id]
+	    set valid_voter_p [lindex $valid_voter 0]
+	    if {$valid_voter_p} {
+		lappend voter_ids $user_id
+	    }
+	}
+    }
+
+    return $voter_ids
 }
