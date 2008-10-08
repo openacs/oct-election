@@ -59,34 +59,35 @@ ad_proc -private oct-election::valid_voter_p {
 
     #Checking CVS commit history
     set cvs_user [acs_user::get_element -user_id $user_id -element username]
-    set cvs_history_days [db_string get_cvs_days {
- 	select cvs_history_days
-	from oct_election
+    set cvs_history_date [db_string get_cvs_days {                 
+ 	select start_time::date - cvs_history_days   
+	from oct_election       
 	where election_id = :election_id
     } ]
-    if {$cvs_history_days eq 0} {
-	set cvs_history_days "all"
-    }
-    set service_url "http://xarg.net/tools/cvs/rss/?user=$cvs_user&days=$cvs_history_days"
+    
+    set ql "select revisions where date in \[${cvs_history_date},[lc_time_fmt $start_date %Y-%m-%d]\] and author=$cvs_user order by date group by directory return totalLines"
+    set csv "true"
+    set service_url [export_vars -base "http://fisheye.openacs.org/search/OpenACS/" {ql csv}]
+    
+    ns_log Warning "vguerra trying request: $service_url"
+    
     if {![catch {
-	set commit_info [ns_httpget $service_url]
+        set commit_info [ns_httpget $service_url]
     } errmsg] } {
-	set doc [dom parse $commit_info]
-	set root_node [$doc documentElement]
-	set commits [llength [$root_node selectNodes /rss/channel/item]]
-	if {!$commits} {
-	    if {$status} {
-		set status 0 
-		set text "You are not a valid voter for this election because you have not committed in the CVS Repository in the last $cvs_history_days.  See <a href=\"http://openacs.org/governance/\">OpenACS Governance</a>"
-	    }
-	} else {
-	    set valid_voter_p 1
-	}
+        set commits [llength [split $commit_info "\n"]]
+        if {$commits < 3} {
+            if {$status} {
+                set status 0 
+                set text "You are not a valid voter for this election because you have not committed in the CVS Repository in the last $cvs_history_days.  See <a href=\"http://openacs.org/governance/\">OpenACS Governance</a>"
+            }
+        } else {
+            set valid_voter_p 1
+        }
     } else {
-	if {$status} {
-	    set status 0 
-	    set text "We can not confirm your commit history in our CVS Repository, so you can not vote at this moment."
-	}
+        if {$status} {
+            set status 0 
+            set text "We can not confirm your commit history in our CVS Repository, so you can not vote at this moment."
+        }
     }
     
     if {!$valid_voter_p} {
