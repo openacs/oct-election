@@ -110,7 +110,7 @@ ad_proc -private oct-election::valid_voter_p {
     return [list $status $text]
 }
 
-ad_proc -public oct_election::valid_voters {
+ad_proc -public oct-election::valid_voters {
     {-status "not_voted"}
     -election_id:required
 } {
