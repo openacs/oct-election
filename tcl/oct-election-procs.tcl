@@ -65,7 +65,7 @@ ad_proc -private oct-election::valid_voter_p {
 	where election_id = :election_id
     } ]
     
-    set ql "select revisions where date in \[${cvs_history_date},[lc_time_fmt $start_date %Y-%m-%d]\] and author=$cvs_user order by date group by directory return totalLines"
+    set ql "select revisions where date in \[${cvs_history_date},[lc_time_fmt $start_time %Y-%m-%d]\] and author=$cvs_user order by date group by directory return totalLines"
     set csv "true"
     set service_url [export_vars -base "http://fisheye.openacs.org/search/OpenACS/" {ql csv}]
     
