@@ -27,12 +27,14 @@ ad_proc -private oct-election::valid_voter_p {
     }
      
     set num_days 90
+
     set valid_voter_p 0
     db_1row get_election {
  	select start_time,
 	       end_time,
 	       vote_forum_cutoff,
 	       label,
+	       cvs_history_days,
                (case when now() > start_time then 1 else 0 end) as past_start_p,
                (case when now() > end_time then 1 else 0 end) as past_end_p
 	from oct_election
@@ -78,7 +80,7 @@ ad_proc -private oct-election::valid_voter_p {
         if {$commits < 3} {
             if {$status} {
                 set status 0 
-                set text "You are not a valid voter for this election because you have not committed in the CVS Repository in the last $cvs_history_days.  See <a href=\"http://openacs.org/governance/\">OpenACS Governance</a>"
+                set text "You are not a valid voter for this election because you have not committed in the CVS Repository in the last $cvs_history_days .  See <a href=\"http://openacs.org/governance/\">OpenACS Governance</a>"
             }
         } else {
             set valid_voter_p 1
