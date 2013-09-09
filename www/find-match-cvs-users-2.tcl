@@ -24,7 +24,7 @@ set search_text [string trim $search_text]
 set title "Searching user"
 set context [list $title]
 
-db_multirow users select_users {
+db_multirow -extend {assigned_p} users select_users {
     select pe.person_id,
     pe.first_names,
     pe.last_name,
@@ -37,6 +37,10 @@ db_multirow users select_users {
     or lower(first_names) like lower('%' || :search_text || '%')
     or lower(email) like lower('%' || :search_text || '%'))
 } {
+    set assigned_p 1
+    if {$username eq "" || [util_email_valid_p $username]} {
+	set assigned_p 0
+    }
 }
 
 ad_return_template

@@ -26,7 +26,7 @@ ad_proc -private oct-election::valid_voter_p {
 	return [list $status $text]
     }
      
-    set num_days 90
+    set num_days 180
 
     set valid_voter_p 0
     db_1row get_election {
@@ -54,6 +54,7 @@ ad_proc -private oct-election::valid_voter_p {
     
     if {$num_posts < 2} {
 	set status 0
+	ns_log warning "not valid voter b/c forums $user_id"
 	set text "You are not a valid voter for this election because you have not posted at least twice in the OpenACS forums since $pretty_vote_forum_cutoff.  See <a href=\"http://openacs.org/governance/\">OpenACS Governance</a>"
     } else {
 	set valid_voter_p 1

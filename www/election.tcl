@@ -10,7 +10,7 @@ set valid_voter [oct-election::valid_voter_p -election_id $election_id -user_id 
 set valid_voter_p [lindex $valid_voter 0]
 set valid_voter_text [lindex $valid_voter 1]
 
-db_1row get_election {
+if {![db_0or1row get_election {
     select start_time,
            end_time,
            vote_forum_cutoff,
@@ -20,7 +20,9 @@ db_1row get_election {
            (case when now() > start_time then 1 else 0 end) as past_start_p,
            (case when now() > end_time then 1 else 0 end) as past_end_p
       from oct_election
-     where election_id = :election_id
+     where election_id = :election_id and election_id <> 2
+}]} {
+    ad_returnredirect "election2"
 }
 
 set pretty_start_time [lc_time_fmt $start_time %c]

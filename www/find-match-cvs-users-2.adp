@@ -4,7 +4,7 @@
   
 <multiple name="users">
 
-  <if @users.username@ ne "">
+  <if @users.assigned_p eq "0">
      <li>@users.last_name@, @users.first_names@ (@users.email@) - <b>CVS user: @users.username@</b></li>
   </if>
   <else>
