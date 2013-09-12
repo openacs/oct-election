@@ -5,7 +5,8 @@ create table oct_election (
     end_time             timestamptz,
     vote_forum_cutoff    timestamptz,
     number_of_candidates integer,
-    label                varchar(100)
+    label                varchar(100),
+    cvs_history_days	 integer
 );
 
 create table oct_candidate (

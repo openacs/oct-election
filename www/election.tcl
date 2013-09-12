@@ -10,17 +10,24 @@ set valid_voter [oct-election::valid_voter_p -election_id $election_id -user_id 
 set valid_voter_p [lindex $valid_voter 0]
 set valid_voter_text [lindex $valid_voter 1]
 
-db_1row get_election {
+if {![db_0or1row get_election {
     select start_time,
            end_time,
            vote_forum_cutoff,
            number_of_candidates,
            label,
+	   cvs_history_days,
            (case when now() > start_time then 1 else 0 end) as past_start_p,
            (case when now() > end_time then 1 else 0 end) as past_end_p
       from oct_election
-     where election_id = :election_id
+     where election_id = :election_id and election_id <> 2
+}]} {
+    ad_returnredirect "election2"
 }
+
+set pretty_start_time [lc_time_fmt $start_time %c]
+set pretty_end_time [lc_time_fmt $end_time %c]
+set pretty_vote_forum_cutoff [lc_time_fmt $vote_forum_cutoff %c]
 
 set ballot_count [db_string get_ballot_count {
     select count(*) 
@@ -52,7 +59,7 @@ template::list::create \
 	}
     }
 
-if {$past_end_p} {
+if {!$past_end_p} {
     set order_clause "order by label"
 } else {
     set order_clause "order by cand_count desc"
@@ -87,4 +94,3 @@ db_1row get_now {
     select now() as now
     from dual;
 }
-

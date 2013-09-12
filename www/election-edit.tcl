@@ -15,6 +15,7 @@ ad_form -name election -form {
     {start_time:text {label "Start Time (2005-04-01 10:00PST)"}}
     {end_time:text {label "End Time"}}
     {vote_forum_cutoff:text {label "Forum Posting cutoff date (2005-04-01 10:00PST)"}}
+    {cvs_history_days:text {label "Number of days for checking Commit History"}}
     {number_of_candidates:integer {label "Number of Candidates"}}
 } -new_request {
     auth::require_login
@@ -31,6 +32,7 @@ ad_form -name election -form {
                end_time,
 	       label,
 	       vote_forum_cutoff,
+	       cvs_history_days,
                number_of_candidates
 	  from oct_election
 	 where election_id = :election_id;
@@ -40,8 +42,8 @@ ad_form -name election -form {
 } -new_data {
     db_dml create_election {
 	insert into oct_election
-	(start_time, end_time, number_of_candidates, label)
-	values (:start_time, :end_time, :number_of_candidates, :label);
+	(start_time, end_time, number_of_candidates, vote_forum_cutoff, label, cvs_history_days)
+	values (:start_time, :end_time, :number_of_candidates, :vote_forum_cutoff, :label, :cvs_history_days);
     }
 } -edit_data {
     db_dml update_election {
@@ -49,8 +51,9 @@ ad_form -name election -form {
 	set start_time = :start_time,
 	end_time = :end_time,
 	vote_forum_cutoff = :vote_forum_cutoff,
+	cvs_history_days = :cvs_history_days,
         number_of_candidates = :number_of_candidates,
-        label = :label
+        label = :label	
 	where election_id = :election_id}
     ad_returnredirect [export_vars -base election {election_id}]
 }
