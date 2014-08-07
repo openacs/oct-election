@@ -1,7 +1,7 @@
 ad_page_contract {
     @cvs-id $Id$
 } {
-    election_id:integer,optional
+    election_id:naturalnum,optional
 } 
 
 permission::require_permission -object_id [ad_conn package_id] -privilege admin

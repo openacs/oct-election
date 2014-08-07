@@ -1,7 +1,7 @@
 ad_page_contract {
     @cvs-id $Id$
 } {
-    election_id:integer
+    election_id:naturalnum,notnull
     q:integer,array,optional
 } 
 

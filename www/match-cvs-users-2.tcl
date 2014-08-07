@@ -9,7 +9,7 @@ ad_page_contract {
     @arch-tag: ba6f1ea5-8703-4ff3-8f17-9e0b5f3aeae3
     @cvs-id $Id$
 } {
-    user_id:integer,notnull
+    user_id:naturalnum,notnull
     cvs_user:notnull
 } -properties {
 } -validate {

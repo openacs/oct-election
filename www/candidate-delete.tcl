@@ -1,8 +1,8 @@
 ad_page_contract {
     @cvs-id $Id$
 } {
-    candidate_id:integer
-    election_id:integer
+    candidate_id:naturalnum,notnull
+    election_id:naturalnum,notnull
 } 
 
 auth::require_login
