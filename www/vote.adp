@@ -1,6 +1,6 @@
 <master>
-  <property name="doc(title)">@page_title;noquote@</property>
-  <property name="context">@context;noquote@</property>
+  <property name="doc(title)">@page_title;literal@</property>
+  <property name="context">@context;literal@</property>
 
 <p>Vote for up to @number_of_candidates@ candidates.  (Extra votes will be ignored.)  Ballots are anonymous and cannot be revoked or altered.</p>
 <form action="vote-process">
