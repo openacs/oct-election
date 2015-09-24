@@ -74,7 +74,7 @@ db_multirow \
     " {
 
 	# don't repeat users
-	if {[lsearch -exact $usernames $cvs_user] != -1} {
+	if {$cvs_user in $usernames} {
 	    continue
 	}
 	lappend usernames $cvs_user
