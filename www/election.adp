@@ -9,12 +9,12 @@
 <p>Forum cutoff date: @pretty_vote_forum_cutoff@
 <p>Check CVS Commit History for the las @cvs_history_days@ days
 <p>Ballots: @ballot_count@
-<if @admin_p@>
+<if @admin_p;literal@ true>
 <p>  <a href="election-edit?election_id=@election_id@">Edit</a></p>
 </if>
 <h2>Candidates</h2>
 <listtemplate name="candidates"></listtemplate>
-<if @admin_p@ and @past_start_p@ ne 1>
+<if @admin_p;literal@ true and @past_start_p;literal@ false>
 <p>
   <form action="candidate-add">
     <input type="hidden" name="election_id" value="@election_id@"/>
@@ -24,7 +24,7 @@
 </p>
 </if>
 
-<if @valid_voter_p@>
+<if @valid_voter_p;literal@ true>
   <form action="vote">
     <input type="hidden" name="election_id" value="@election_id@"/>
     <input type="submit" value="Vote"/>

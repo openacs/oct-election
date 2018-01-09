@@ -3,6 +3,6 @@
   <property name="context">"@context;noquote@"</property>
 
 <listtemplate name="elections"></listtemplate>
-<if @admin_p@>
+<if @admin_p;literal@ true>
 <p><a href="election-edit">Add an Election</a></p>
 </if>
