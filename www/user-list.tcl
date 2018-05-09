@@ -53,7 +53,7 @@ set valid_voter_p 0
 
 set before_sql "to_date(:vote_forum_cutoff, 'YYYY-MM-DD')"
 
-set usernames {}
+set usernames [list]
 
 
 db_multirow \
