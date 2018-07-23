@@ -33,7 +33,7 @@ while {[array anymore q $searchId]} {
     }
 
     set candidate_id [array nextelement q $searchId]
-    set votes [expr $votes + 1]
+    incr votes
 
     # TODO: verify that the candidate is actually in the election
     db_dml tally_vote {
