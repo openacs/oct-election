@@ -3,7 +3,7 @@ ad_page_contract {
 } {
     election_id:naturalnum,notnull
     q:integer,array,optional
-} 
+}
 
 set user_id [auth::require_login]
 set valid_voter [oct-election::valid_voter_p -election_id $election_id -user_id $user_id]
@@ -27,9 +27,9 @@ set max_votes [db_string get_max_votes {
 set searchId [array startsearch q]
 while {[array anymore q $searchId]} {
     if {$votes  > $max_votes} {
-	#don't process this vote or any others
-	# this may be early by 1 - should it go after set candidate?
-	break
+        #don't process this vote or any others
+        # this may be early by 1 - should it go after set candidate?
+        break
     }
 
     set candidate_id [array nextelement q $searchId]
@@ -37,13 +37,10 @@ while {[array anymore q $searchId]} {
 
     # TODO: verify that the candidate is actually in the election
     db_dml tally_vote {
-	insert into oct_vote values (:candidate_id);
+        insert into oct_vote values (:candidate_id);
     }
-
-
 }
 
 db_dml mark_user_ballot {
     insert into oct_ballot values (:user_id, :election_id);
 }
-
